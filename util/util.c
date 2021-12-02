@@ -2,6 +2,7 @@
 #include "util.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void loadInput(char* filename, int lineLength, char** out) {
   FILE* file = fopen(filename, "r");
@@ -11,7 +12,8 @@ void loadInput(char* filename, int lineLength, char** out) {
   }
   
   int i = 0;
-  while (fscanf(file, "%s", out[i])) {
+  while (fgets(out[i], lineLength, file)) {
+    out[i][strcspn(out[i], "\n")] = 0;
     i++;
   }
   fclose(file);
@@ -36,4 +38,13 @@ void loadInputInts(char* filename, int lines, int lineLength, int* out) {
   }
   free(input);
   printf("Input ints loaded!\n");
+}
+
+char** mallocStringArray(int lines, int lineLength) {
+  char** input = malloc(sizeof(char*)*lines);
+  for (int i = 0; i < lines; i++) {
+    input[i] = malloc(sizeof(char) * lineLength);
+  }
+
+  return input;
 }

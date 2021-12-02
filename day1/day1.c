@@ -6,14 +6,15 @@
 #include "../util/util.h"
 
 const int lines = 2000;
-const int lineLength = 5;
+const int lineLength = 6;
 
-void day1() {
+int main() {
   int* depths = malloc(sizeof(int)*lines);
-  loadInputInts("day1/input.txt", lines, lineLength, depths);
+  loadInputInts("input.txt", lines, lineLength, depths);
   //part1(depths);
   part2(depths);
   free(depths);
+  return 0;
 }
 
 void part1(int* depths) {

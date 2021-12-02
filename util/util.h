@@ -3,5 +3,6 @@
 
 void loadInput(char* filename, int lineLength, char** out);
 void loadInputInts(char* filename, int lines, int lineLength, int* out);
+char** mallocStringArray(int lines, int lineLength);
 
 #endif
