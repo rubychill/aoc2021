@@ -48,3 +48,23 @@ char** mallocStringArray(int lines, int lineLength) {
 
   return input;
 }
+
+void loadInputsBase(char* filename, int lines, int lineLength, int* out, int base) {
+  char** input = malloc(sizeof(char*)*lines);
+  for (int i = 0; i < lines; i++) {
+    input[i] = malloc(sizeof(char) * lineLength);
+  }
+
+  loadInput(filename, lineLength, input);
+  for (int i = 0; i < lines; i++) {
+    int inputInt = strtol(input[i], NULL, base);
+    out[i] = inputInt;
+  }
+
+  // free
+  for (int i = 0; i < lines; i++) {
+    free(input[i]);
+  }
+  free(input);
+  printf("Input ints loaded!\n");
+}

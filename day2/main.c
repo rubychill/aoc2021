@@ -11,8 +11,9 @@ const int lineLength = 11;
 int main() {
   char** inputLines = mallocStringArray(lines, lineLength);
   loadInput("input.txt", lineLength, inputLines);
-  //part1(inputLines)
+  //part1(inputLines);
   part2(inputLines);
+  // this is a leak lol
   free(inputLines);
   return 0;
 }
