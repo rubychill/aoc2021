@@ -2,7 +2,8 @@
 #define MAIN_H
 
 int main();
-void part1(char** input);
-void part2(char** input);
+void part1(int* input);
+void part2(int* input);
+long solution(int* input, int solutionDays);
 
 #endif
