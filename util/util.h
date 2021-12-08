@@ -9,5 +9,6 @@ void loadInputLines(char* filename, int lineLength, int lines, char** out);
 void loadInputsBase(char* filename, int lines, int lineLength, int* out, int base);
 char** mallocStringArray(int lines, int lineLength);
 void freeStringArray(char** stringArray, int arrayLength);
+int power10(int n);
 
 #endif

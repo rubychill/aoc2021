@@ -91,3 +91,12 @@ void loadInputsBase(char* filename, int lines, int lineLength, int* out, int bas
   free(input);
   printf("Input ints loaded!\n");
 }
+
+int power10(int n) {
+    static int pow[10] = {
+        1, 10, 100, 1000, 10000, 
+        100000, 1000000, 10000000, 100000000, 1000000000
+    };
+
+    return pow[n]; 
+}
