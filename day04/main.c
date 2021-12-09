@@ -29,25 +29,60 @@ int main() {
 
 int boardStart(int i) { return i * boardSize; }
 int boardNumber(int i) {return i / boardSize; }
-int boardStateStart(int i) { return i * boardWidth; }
 int boardStateIndex(int i) { return i / boardWidth; }
 int boardStateOffset(int i) { return i % boardWidth; }
 int boardFlippedStateIndex(int i) { return (i % boardWidth) + (boardNumber(i) * boardWidth); }
 int boardFlippedStateOffset(int i) {return (i % boardSize) / boardWidth; }
 
-
+/**
+ * State is stored twice so that completed lines can be read as 0x1F integers both horizontally and vertically
+ * Horizontal state (regular state) is intuitive, if boards are lined up vertically each int will represent the following state
+ * 
+ * (board 0)
+ *  0  0  0  0  0
+ *  1  1  1  1  1
+ *  2  2  2  2  2
+ *  3  3  3  3  3
+ *  4  4  4  4  4
+ *  5  5  5  5  5
+ * 
+ * (board 1)
+ *  6  6  6  6  6
+ *  7  7  7  7  7
+ *  8  8  8  8  8
+ *  9  9  9  9  9
+ * 10 10 10 10 10
+ * 
+ * (etc...)
+ * 
+ * Vertical state (flipped state) is funky but makes sense if you imagine the boards lined up horizontally
+ * (board 0)         (board 1)             (etc...)
+ *  0  1  2  3  4     5  6  7  8  9  10
+ *  0  1  2  3  4     5  6  7  8  9  10
+ *  0  1  2  3  4     5  6  7  8  9  10
+ *  0  1  2  3  4     5  6  7  8  9  10
+ *  0  1  2  3  4     5  6  7  8  9  10
+ * 
+ * For each horizontal or vertical line, the state is store as a int representing the binary state of that line
+ * eg: a row:
+ *  - X - X X
+ * will have the binary representation 0b01011 (11)
+ * We know a row is full when it has the value 0b11111 (31)
+ */
 
 void part1(int* numbers, int* boards) {
   int* boardStates = calloc(sizeof(int), boardCount * 5);
   int* boardStatesFlipped = calloc(sizeof(int), boardCount * 5);
   int* boardSolved = calloc(sizeof(int), boardCount);
 
+  // draw numbers
   for (int draw = 0; draw < numbersDrawn; draw++) {
     int drawnNumber = numbers[draw];
+    // iterate through all board numbers
     for (int i = 0; i < boardLines; i++) {
       int boardValue = boards[i];
       if (boardValue == drawnNumber) {
-        int board = boardNumber(i);
+        // grab all the needed state indexes
         int stateIndex = boardStateIndex(i);
         int stateOffset = boardStateOffset(i);
         int flippedIndex = boardFlippedStateIndex(i);
@@ -66,6 +101,7 @@ void part1(int* numbers, int* boards) {
         boardSolved[boardIndex] = 1;
         int score = 0;
         for (int i = boardStart(boardIndex); i < boardStart(boardIndex + 1); i++) {
+          // make a bit mask to check whether a space was marked
           int comp = 1 << boardStateOffset(i);
           if ((boardStates[boardStateIndex(i)] & comp) == 0) {
             score += boards[i];
