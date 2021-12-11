@@ -1,14 +1,14 @@
-HEADERS = day1.h ../util/util.h
-OBJECTS = day1.o ../util/util.o
+HEADERS = main.h ../util/util.h
+OBJECTS = main.o ../util/util.o
 
-default: day1
+default: run
 
 %.o: %.c $(HEADERS)
 	gcc -c $< -o $@
 
-day1: $(OBJECTS)
+run: $(OBJECTS)
 	gcc $(OBJECTS) -o $@
 
 clean:
 	-rm -f $(OBJECTS)
-	-rm -f day1
+	-rm -f main

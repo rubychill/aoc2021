@@ -1,4 +1,4 @@
-#include "day1.h"
+#include "main.h"
 
 #include <stdio.h>
 #include <string.h>
