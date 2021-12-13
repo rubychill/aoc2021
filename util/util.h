@@ -49,4 +49,23 @@ int peek(struct Stack* stack);
 int compare( const void* a, const void* b);
 int comparel( const void* a, const void* b);
 
+typedef struct List {
+  unsigned capacity;
+  unsigned size;
+  void** array;
+} List;
+
+List* createList(int capacity);
+int lsSize(List* ls);
+int lsIsEmpty(List* ls);
+void* lsGet(List* ls, int index);
+void lsInsert(List* ls, void* item, int index);
+void* lsremove(List* ls, int index);
+int lsIndexOf(List* ls, void* item, int (*comp)(const void*, const void*));
+void lsAddHead(List* ls, void* item);
+void lsAddTail(List* ls, void* item);
+void* lsRemoveHead(List* ls);
+void* lsRemoveTail(List* ls);
+List* lsCloneList(List* ls);
+
 #endif

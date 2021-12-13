@@ -98,7 +98,9 @@ void part2(int* input) {
 
     // Keep iterating through input until no more flashes happen
     int iterFlashes = 0;
+    int iterCount = 0;
     do {
+      iterCount++;
       iterFlashes = 0;
       for (int i = 0; i < totalSize; i++) {
         if (input[i] != -1) {
@@ -120,6 +122,7 @@ void part2(int* input) {
       }
       flashes += iterFlashes;
     } while (iterFlashes != 0);
+    //printf("iterations: %d\n", iterCount);
     // Set all -1 values to 0
     int stepFlashes = 0;
     for (int i = 0; i < totalSize; i++) {

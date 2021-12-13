@@ -220,3 +220,88 @@ int comparel( const void* a, const void* b) {
   else if ( int_a < int_b ) return -1;
   else return 1;
 }
+
+/**
+ * List implementation
+ */
+List* createList(int capacity) {
+  List* list = malloc(sizeof(List));
+  void** array = calloc(sizeof(void*), capacity);
+  list->array = array;
+  list->size = 0;
+  list->capacity = capacity;
+  return list;
+}
+
+int lsSize(List* ls) { return ls->size; }
+
+int lsIsEmpty(List* ls) { return ls->size == 0; }
+
+void* lsGet(List* ls, int index) {
+  return ls->array[index];
+}
+
+void lsInsert(List* ls, void* item, int index) {
+  if (index < 0 || index > ls->size) {
+    printf("can't insert outside of current list size ya big dingus\n");
+    return;
+  }
+  if (ls->size == ls->capacity) {
+    printf("list is already at capacity ya big dingus\n");
+    return;
+  }
+
+  void* temp;
+  for (int i = index; i < ls->size + 1; i++) {
+    temp = ls->array[i + 1];
+    ls->array[i + 1] = ls->array[i];
+  }
+
+  ls->array[index] = item;
+  ls->size++;
+}
+
+void* lsRemove(List* ls, int index) {
+  if (index < 0 || index > ls->size - 1) {
+    printf("index is outside valid ranges ya big dingus\n");
+  }
+  void* removed = ls->array[index];
+  for (int i = index; i < ls->size + 1; i++) {
+    ls->array[i] = ls->array[i + 1];
+  }
+
+  ls->size--;
+  return removed;
+}
+
+int lsIndexOf(List* ls, void* item, int (*comp)(const void*, const void*)) {
+  for (int i = 0; i < ls->size; i++) {
+    if (!comp(ls->array[i], item)) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+void lsAddHead(List* ls, void* item) {
+  lsInsert(ls, item, 0);
+}
+
+void lsAddTail(List* ls, void* item) {
+  lsInsert(ls, item, ls->size);
+}
+
+void* lsRemoveHead(List* ls) {
+  return lsRemove(ls, 0);
+}
+
+void* lsRemoveTail(List* ls) {
+  return lsRemove(ls, ls->size - 1);
+}
+
+List* lsCloneList(List* ls) {
+  List* newList = createList(ls->capacity);
+  memcpy(newList->array, ls->array, ls->capacity);
+  newList->size = ls->size;
+  return newList;
+}
