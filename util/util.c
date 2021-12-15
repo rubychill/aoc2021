@@ -162,7 +162,7 @@ struct Stack* createStack(unsigned capacity)
     struct Stack* stack = (struct Stack*)malloc(sizeof(struct Stack));
     stack->capacity = capacity;
     stack->top = -1;
-    stack->array = (int*)malloc(stack->capacity * sizeof(int));
+    stack->array = (void**)malloc(stack->capacity * sizeof(void*));
     return stack;
 }
  
@@ -179,7 +179,7 @@ int isEmpty(struct Stack* stack)
 }
  
 // Function to add an item to stack.  It increases top by 1
-void push(struct Stack* stack, int item)
+void push(struct Stack* stack, void* item)
 {
     if (isFull(stack))
         return;
@@ -188,18 +188,18 @@ void push(struct Stack* stack, int item)
 }
  
 // Function to remove an item from stack.  It decreases top by 1
-int pop(struct Stack* stack)
+void* pop(struct Stack* stack)
 {
     if (isEmpty(stack))
-        return INT_MIN;
+        return NULL;
     return stack->array[stack->top--];
 }
  
 // Function to return the top from stack without removing it
-int peek(struct Stack* stack)
+void* peek(struct Stack* stack)
 {
     if (isEmpty(stack))
-        return INT_MIN;
+        return NULL;
     return stack->array[stack->top];
 }
 
@@ -210,6 +210,15 @@ int compare( const void* a, const void* b) {
   if ( int_a == int_b ) return 0;
   else if ( int_a < int_b ) return -1;
   else return 1;
+}
+
+int compareDecreasing( const void* a, const void* b) {
+  int int_a = * ( (int*) a );
+  int int_b = * ( (int*) b );
+
+  if ( int_a == int_b ) return 0;
+  else if ( int_a < int_b ) return 1;
+  else return -1;
 }
 
 int comparel( const void* a, const void* b) {
@@ -251,10 +260,8 @@ void lsInsert(List* ls, void* item, int index) {
     return;
   }
 
-  void* temp;
-  for (int i = index; i < ls->size + 1; i++) {
-    temp = ls->array[i + 1];
-    ls->array[i + 1] = ls->array[i];
+  for (int i = ls->size; i > index; i--) {
+    ls->array[i] = ls->array[i - 1];
   }
 
   ls->array[index] = item;
@@ -301,7 +308,74 @@ void* lsRemoveTail(List* ls) {
 
 List* lsCloneList(List* ls) {
   List* newList = createList(ls->capacity);
-  memcpy(newList->array, ls->array, ls->capacity);
+  memcpy(newList->array, ls->array, ls->capacity * sizeof(void*));
   newList->size = ls->size;
   return newList;
 }
+
+List* lsResizeList(List* ls, int newSize) {
+  if (newSize < ls->capacity) {
+    printf("new size needs to be larger than existing capacity ya big dingus\n");
+    return ls;
+  }
+  List* newList = createList(newSize);
+  newList->size = ls->size;
+  memcpy(newList->array, ls->array, ls->capacity * sizeof(void*));
+  lsFree(ls);
+  return newList;
+}
+
+void lsFree(List* ls) {
+  free(ls->array);
+  free(ls);
+}
+
+/**
+ * LinkedList implementation
+ */
+ListNode* createListNode(void* value) {
+  ListNode* node = malloc(sizeof(ListNode));
+  node->value = value;
+  node->next = NULL;
+  return node;
+}
+
+ListNode* llsGet(ListNode* ls, long index) {
+  ListNode* c = ls;
+  for (int i = 0; i < index - 1; i++) {
+    c = c->next;
+  }
+  return c;
+}
+
+void llsAddTail(ListNode* ls, void* item) {
+  ListNode* newNode = createListNode(item);
+  ListNode* tail = ls;
+  while (tail->next != NULL) {
+    tail = tail->next;
+  }
+  tail->next = newNode;
+}
+
+void llsInsertNode(ListNode* before, ListNode* insert) {
+  ListNode* after = before->next;
+  before->next = insert;
+  insert->next = after;
+}
+
+void llsInsertValue(ListNode* before, void* insert) {
+  ListNode* insertNode = malloc(sizeof(ListNode));
+  insertNode->value = insert;
+  llsInsertNode(before, insertNode);
+}
+
+/**
+ * Index to xy funcs
+ */
+int itox(int i, int width) { return i % width; }
+int itoy(int i, int width) { return i / width; }
+int xytoi(int x, int y, int width) { return y * width + x; }
+int iN(int i, int width) { if (itoy(i, width) == 0) return -1; return i - width; }
+int iS(int i, int width, int height) { if (itoy(i, width) == height - 1) return -1; return i + width; }
+int iW(int i, int width) { if (itox(i, width) == 0) return -1; return i - 1; }
+int iE(int i, int width) { if (itox(i, width) == width - 1) return -1; return i + 1; }

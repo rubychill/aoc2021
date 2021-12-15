@@ -3,6 +3,8 @@
 
 #define result(i) printf("result: %d\n", i);
 
+#include <limits.h>
+
 void loadInput(char* filename, int lineLength, char** out);
 void loadInputInts(char* filename, int lines, int lineLength, int* out);
 void loadInputIntArray(char* filename, int lines, int lineLength, int** out);
@@ -24,7 +26,7 @@ typedef struct Point {
 typedef struct Stack {
     int top;
     unsigned capacity;
-    int* array;
+    void** array;
 } Stack;
  
 // function to create a stack of given capacity. It initializes size of
@@ -38,15 +40,16 @@ int isFull(struct Stack* stack);
 int isEmpty(struct Stack* stack);
  
 // Function to add an item to stack.  It increases top by 1
-void push(struct Stack* stack, int item);
+void push(struct Stack* stack, void* item);
  
 // Function to remove an item from stack.  It decreases top by 1
-int pop(struct Stack* stack);
+void* pop(struct Stack* stack);
  
 // Function to return the top from stack without removing it
-int peek(struct Stack* stack);
+void* peek(struct Stack* stack);
 
 int compare( const void* a, const void* b);
+int compareDecreasing( const void* a, const void* b);
 int comparel( const void* a, const void* b);
 
 typedef struct List {
@@ -67,5 +70,30 @@ void lsAddTail(List* ls, void* item);
 void* lsRemoveHead(List* ls);
 void* lsRemoveTail(List* ls);
 List* lsCloneList(List* ls);
+List* lsResizeList(List* ls, int newSize);
+void lsFree(List* ls);
+
+
+typedef struct ListNode {
+  void* value;
+  struct ListNode* next;
+} ListNode;
+
+ListNode* createListNode(void* value);
+ListNode* llsGet(ListNode* ls, long index);
+void llsAddTail(ListNode* ls, void* item);
+void llsInsertNode(ListNode* before, ListNode* insert);
+void llsInsertValue(ListNode* before, void* insert);
+
+/**
+ * Index to xy funcs
+ */
+int itox(int i, int width);
+int itoy(int i, int width);
+int xytoi(int x, int y, int width);
+int iN(int i, int width);
+int iS(int i, int width, int height);
+int iW(int i, int width);
+int iE(int i, int width);
 
 #endif
